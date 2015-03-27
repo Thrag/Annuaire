@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by Thrag on 26/03/15.
  */
@@ -15,7 +17,9 @@ public class DBHelper extends SQLiteOpenHelper
     private static final String DATABASE_NAME = "hackathon.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_ENDROIT = "table_endroit";
+    private static final String TABLE_PLACE = "table_place";
+    private static final String TABLE_CITY = "table_city";
+    private static final String TABLE_CATEGORY = "table_category";
 
     private static final String COlUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
@@ -27,14 +31,14 @@ public class DBHelper extends SQLiteOpenHelper
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
 
-    private static final String REQUETE_CREATION_BD = "create table "
-            + TABLE_ENDROIT + " ("
+    private static final String REQUETE_CREATION_PLACE = "create table "
+            + TABLE_PLACE + "("
             + COlUMN_ID + " integer autoincrement, "
             + COLUMN_NAME + "primary key, text not null, "
             + COLUMN_DESCRIPTION
             + COLUMN_CITY + "text not null"
-            + COLUMN_CATEGORY
-            + COLUMN_ADDRESS
+            + COLUMN_CATEGORY + "text not null"
+            + COLUMN_ADDRESS + "text not null"
             + COLUMN_PHONE
             + COLUMN_LATITUDE
             + COLUMN_LONGITUDE
@@ -45,8 +49,9 @@ public class DBHelper extends SQLiteOpenHelper
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(REQUETE_CREATION_BD);
+    public void onCreate(SQLiteDatabase db)
+    {
+        db.execSQL(REQUETE_CREATION_PLACE);
     }
 
     @Override
@@ -54,11 +59,91 @@ public class DBHelper extends SQLiteOpenHelper
         Log.w(DBHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENDROIT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLACE);
         onCreate(db);
     }
 
-    public void addPlace(Place place) {
+    public boolean addPlace(Place place) {
+
+        boolean result = false;
+
+        //Adding the values to TABLE_PLACE
+        ContentValues placeValue = new ContentValues();
+
+        placeValue.put(COLUMN_NAME, place.getName());
+        placeValue.put(COLUMN_DESCRIPTION, place.getDescription());
+        placeValue.put(COLUMN_CITY, place.getCity());
+        placeValue.put(COLUMN_CATEGORY, place.getCategory());
+        placeValue.put(COLUMN_ADDRESS, place.getAddress());
+        placeValue.put(COLUMN_PHONE, place.getPhone());
+        placeValue.put(COLUMN_LATITUDE, place.getLatitude());
+        placeValue.put(COLUMN_LONGITUDE, place.getLongitude());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TABLE_PLACE, null, placeValue);
+
+        db.close();
+        result = true;
+        return result;
+    }
+
+    public Place getPlace(String name){
+
+        String query = "Select * FROM " + TABLE_PLACE + " WHERE " + COLUMN_NAME + " =  \"" + name + "\"";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        Place place = new Place();
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
+            place.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+            place.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+            place.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));
+            place.setCategory(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
+            place.setAddress(cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)));
+            place.setPhone(cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)));
+            place.setLatitude(Float.parseFloat(cursor.getString(cursor.getColumnIndex(COLUMN_LATITUDE))));
+            place.setLongitude(Float.parseFloat(cursor.getString(cursor.getColumnIndex(COLUMN_LONGITUDE))));
+
+            cursor.close();
+        } else {
+            place = null;
+        }
+        db.close();
+        return place;
+    }
+
+    public boolean deletePlace(String name) {
+
+        boolean result = false;
+
+        String query = "Select * FROM " + TABLE_PLACE + " WHERE " + COLUMN_NAME + " =  \"" + name + "\"";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        Place place = new Place();
+
+        if (cursor.moveToFirst()) {
+            place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
+            db.delete(TABLE_PLACE, COlUMN_ID + " = ?",
+                    new String[] { String.valueOf(place.getID()) });
+            cursor.close();
+            result = true;
+        }
+        db.close();
+        return result;
+    }
+
+    public boolean modifyEndroit(String name, Place place) {
+
+        boolean result = false;
 
         ContentValues values = new ContentValues();
 
@@ -73,75 +158,50 @@ public class DBHelper extends SQLiteOpenHelper
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.insert(TABLE_ENDROIT, null, values);
-        db.close();
-    }
+        db.update(TABLE_PLACE, values, COlUMN_ID + "=" + place.getID(), null);
 
-    public Place getPlace(String name){
-
-        String query = "Select * FROM " + TABLE_ENDROIT + " WHERE " + COLUMN_NAME + " =  \"" + name + "\"";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        Place place = new Place();
-
-        if (cursor.moveToFirst()) {
-            cursor.moveToFirst();
-            place.setID(Integer.parseInt(cursor.getString(0)));
-            place.setName(cursor.getString(1));
-            place.setDescription(cursor.getString(2));
-            place.setCity(cursor.getString(3));
-            place.setCategory(cursor.getString(4));
-            place.setAddress(cursor.getString(5));
-            place.setPhone(cursor.getString(6));
-            place.setLatitude(Float.parseFloat(cursor.getString(7)));
-            place.setLongitude(Float.parseFloat(cursor.getString(8)));
-
-            cursor.close();
-        } else {
-            place = null;
-        }
-        db.close();
-        return place;
-    }
-
-    public boolean deletePlace(String name) {
-
-        boolean result = false;
-
-        String query = "Select * FROM " + TABLE_ENDROIT + " WHERE " + COLUMN_NAME + " =  \"" + name + "\"";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        Place place = new Place();
-
-        if (cursor.moveToFirst()) {
-            place.setID(Integer.parseInt(cursor.getString(0)));
-            db.delete(TABLE_ENDROIT, COlUMN_ID + " = ?",
-                    new String[] { String.valueOf(place.getID()) });
-            cursor.close();
-            result = true;
-        }
-        db.close();
+        result = true;
         return result;
     }
 
-    public boolean modifyEndroit(String name, Place place){
+    public ArrayList<Place> getAllNames(){//DOING
 
-        boolean result = false;
+        ArrayList<Place> places = new ArrayList<Place>();
 
-        String query = "";
-        return result;
+        String query = "Select" + COLUMN_NAME + " FROM " + TABLE_PLACE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor .moveToFirst()) {
+
+            while (cursor.isAfterLast() == false) {
+                Place place = new Place();
+
+                place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
+                place.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+                place.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+                place.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));
+                place.setCategory(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
+                place.setAddress(cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)));
+                place.setPhone(cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)));
+                place.setLatitude(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_LATITUDE))));
+                place.setLongitude(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_LONGITUDE))));
+
+                cursor.moveToNext();
+
+                places.add(place);
+            }
+        }
+
+        db.close();
+
+        return places;
     }
 
-    /*TODO SELECT ALL
-        *MODIFY
+    /*TODO SELECT ALL name
         *SELECT ALL IN A CATEGORY
         *SELECT ALL IN A CITY
-        *SPLIT BDD
     */
 }
