@@ -1,4 +1,4 @@
-package com.example.thrag.hackthon;
+package com.example.thrag.annuaire;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -135,6 +135,7 @@ public class DBHelper extends SQLiteOpenHelper
         boolean result = false;
 
         String query = "";
+        return result;
     }
 
     /*TODO SELECT ALL

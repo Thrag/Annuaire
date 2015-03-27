@@ -1,4 +1,4 @@
-package com.example.thrag.hackthon;
+package com.example.thrag.annuaire;
 
 import android.app.Activity;
 import android.os.Bundle;

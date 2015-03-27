@@ -1,4 +1,4 @@
-package com.example.thrag.hackthon;
+package com.example.thrag.annuaire;
 
 /**
  * Created by Thrag on 25/03/15.
