@@ -18,8 +18,6 @@ public class DBHelper extends SQLiteOpenHelper
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_PLACE = "table_place";
-    private static final String TABLE_CITY = "table_city";
-    private static final String TABLE_CATEGORY = "table_category";
 
     private static final String COlUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
@@ -84,7 +82,9 @@ public class DBHelper extends SQLiteOpenHelper
         db.insert(TABLE_PLACE, null, placeValue);
 
         db.close();
+
         result = true;
+
         return result;
     }
 
@@ -100,7 +100,7 @@ public class DBHelper extends SQLiteOpenHelper
 
         if (cursor.moveToFirst()) {
             cursor.moveToFirst();
-            //place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
+
             place.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
             place.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
             place.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));
@@ -177,6 +177,10 @@ public class DBHelper extends SQLiteOpenHelper
                 break;
             case COLUMN_CITY : query = query + "SELECT * FROM " + TABLE_PLACE + " WHERE " + COLUMN_CITY + " = \"" + search + "\"";
                 break;
+            case COLUMN_DESCRIPTION : query = query + "SELECT * FROM " + TABLE_PLACE + " WHERE " + COLUMN_DESCRIPTION + " = \"%" + search + "%\"";
+                break;
+            case COLUMN_ADDRESS : query = query + "SELECT * FROM " + TABLE_PLACE + " WHERE " + COLUMN_ADDRESS + " = \"%" + search + "%\"";
+                break;
         }
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -188,7 +192,6 @@ public class DBHelper extends SQLiteOpenHelper
             while (cursor.isAfterLast() == false) {
                 Place place = new Place();
 
-                //place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
                 place.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
                 place.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
                 place.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));

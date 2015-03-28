@@ -76,37 +76,41 @@ public class AddPlaceActivity extends Activity {
                     String address = editAddress.getText().toString();
                     String phone = editPhone.getText().toString();
 
-                    if(name != null && address != null && category != null && city != null ) validation = true;
-
-                    Place place = new Place();
+                    if(!name.equals("") && !address.equals("") && !category.equals("") && !city.equals("") ) validation = true;
 
                     if(validation == true)
                     {
+                        Place place = new Place();
+
                         place.setName(name);
-                        if(description != null) place.setDescription(description);
+                        if(description != "") {place.setDescription(description);}else{place.setDescription("");}
                         place.setCategory(category);
                         place.setCity(city);
                         place.setAddress(address);
-                        if(phone != null) place.setPhone(phone);
+                        if(phone != "") {place.setPhone(phone);}else{place.setPhone("");}
+
+                        DBHelper db = new DBHelper(getApplicationContext());
+
+                        db.getWritableDatabase();
+
+                        if(db.addPlace(place)) {
+                            Toast.makeText(getApplicationContext(), "Ajout", Toast.LENGTH_LONG).show();
+                        }
+
+                        Intent intent = new Intent(AddPlaceActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                     else
                     {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
-
-                        alert.setMessage(R.string.addAlert)
-                             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                         public void onClick(DialogInterface dialog, int id) {
-                                         }
-                                     });
+                        new AlertDialog.Builder(AddPlaceActivity.this)
+                                .setMessage("Veuillez complèter les champs marqués en orange.")
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                })
+                                .show();
                     }
-
-                    DBHelper db = new DBHelper(getApplicationContext());
-
-                    db.getWritableDatabase();
-
-                    db.addPlace(place);
-
-                    Toast.makeText(getApplicationContext(), "Ajout", Toast.LENGTH_LONG).show();
 
                     break;
             }
