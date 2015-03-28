@@ -10,5 +10,9 @@
     <string name="address">Adresse</string>
     <string name="phone">N° de téléphone</string>
     <string name="addAlert">Veuillez compléter, au minimum, les champs en orange</string>
+    <string name="title">Titre</string>
+    <string name="edit">Modifier</string>
+    <string name="menu">Menu</string>
+    <string name="details">Détails</string>
 
 </resources>

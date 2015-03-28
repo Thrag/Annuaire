@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
 
     Button list;
+    Button details;
 
     // Wesh ma gueule !
     // Kawabounga MA GEULE :D
@@ -27,6 +28,9 @@ public class MainActivity extends Activity {
 
         list = (Button)findViewById(R.id.buttonList);
         list.setOnClickListener(listener);
+
+        details = (Button)findViewById(R.id.buttonDetails);
+        details.setOnClickListener(listener);
 
         Place place1 = new Place("Test1", "Ceci est un test", 102, 102, "Liège", "Food", "rue des boobs", "911");
         Place place2 = new Place("Test2", "Ceci est un test", 102, 102, "BXL", "Musée", "rue des nichons", "912");
@@ -78,7 +82,12 @@ public class MainActivity extends Activity {
                     startActivity(i);
                     break;
 
+                case R.id.buttonDetails:
 
+                    Intent intent = new Intent(MainActivity.this, ShowDetails.class);
+                    intent.putExtra("nom","Anata");
+                    startActivity(intent);
+                break;
             }
         }
     };
