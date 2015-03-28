@@ -1,14 +1,17 @@
 package com.example.thrag.annuaire;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +24,11 @@ public class DetailsActivity extends Activity{
     Button Add;
     Button Menu;
     Button Edit;
-    static Integer inter = 0;
+
     Place place1 = new Place("Random Place","Random",421,422,"Random City","Random Category","Random Street", "0042");
     Place place2 = new Place("Blop Place","Blop",800,801,"Blop City","Blop Category","Blop Street", "080");
-    Place place3 = new Place("Blop Place","Blop",800,801,"Blop City","Blop Category","Blop Street", "080");
-    static List<Place> listString = new ArrayList<Place>();
+    Place place3 = new Place("Kaboum Place","Kaboum",690,691,"Kaboum City","Kaboum Category","Kaboum Street", "69");
+    Place[] listPlace = {place1,place2,place3};
     //------------------------
 
     private ListView lv;
@@ -42,20 +45,20 @@ public class DetailsActivity extends Activity{
         Menu.setOnClickListener(listener);
         Edit = (Button)findViewById(R.id.buttonEdit);
         Edit.setOnClickListener(listener);
+
+        lv = (ListView) findViewById(R.id.detailList);
         RemplirList();
     }
 
     private void RemplirList() {
-
-        lv = (ListView) findViewById(R.id.detailList);
-
         ArrayAdapter<Place> arrayAdapter = new ArrayAdapter<Place>(
-                this,android.R.layout.simple_list_item_1,listString );
-
+                this,android.R.layout.simple_list_item_single_choice,listPlace );
         lv.setAdapter(arrayAdapter);
+        lv.setItemChecked(0,true);
+        lv.requestFocusFromTouch();
+        lv.setSelection(0);
 
     }
-
     View.OnClickListener listener = new View.OnClickListener()
     {
         public void onClick(View view)
@@ -68,7 +71,7 @@ public class DetailsActivity extends Activity{
                     startActivity(u);
                     break;
                 case R.id.buttonEdit:
-                    removePlace();
+                    editPlace();
                     Intent v = new Intent(DetailsActivity.this, DetailsActivity.class);
                     startActivity(v);
                     break;
@@ -97,17 +100,23 @@ public class DetailsActivity extends Activity{
 
         return super.onOptionsItemSelected(item);
     }
-
+    public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
+        Place item = (Place) adapter.getItemAtPosition(position);
+        Toast.makeText(getApplicationContext(), "Test "+item.getName(), Toast.LENGTH_LONG).show();
+    }
     private void addPlace(){
-        inter ++;
-        listString.add(place1);
-        listString.add(place2);
+           //PLOP
     }
     private void removePlace(){
-        inter --;
-        listString.remove(listString.size()-1);
+        //PLOP
     }
     private void editPlace(){
-
+        Integer Position = lv.getCheckedItemPosition();
+        Toast.makeText(getApplicationContext(), "Choix =  "+(getPlace(Position).getCity()), Toast.LENGTH_LONG).show();
+    }
+    private Place getPlace(int Position){
+        Place placeFound = new Place();
+        placeFound = (Place) lv.getItemAtPosition(Position);
+        return placeFound;
     }
 }

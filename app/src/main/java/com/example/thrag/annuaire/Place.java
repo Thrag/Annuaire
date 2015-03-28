@@ -17,17 +17,7 @@ public class Place {
 
     @Override
     public String toString() {
-        return "Place{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", city='" + city + '\'' +
-                ", category='" + category + '\'' +
-                ", address='" + address + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+        return   name + "  ,  "+ city ;
     }
 
     //Constructor
