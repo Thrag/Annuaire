@@ -46,12 +46,6 @@ public class AddPlaceActivity extends Activity {
 
     }
 
-    /*DBHelper db = new DBHelper(getApplicationContext());
-
-    db.getWritableDatabase();
-
-    db.addPlace(place1);*/
-
     View.OnClickListener listener = new View.OnClickListener()
     {
         public void onClick(View view)

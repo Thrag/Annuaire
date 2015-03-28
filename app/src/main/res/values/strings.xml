@@ -14,5 +14,7 @@
     <string name="edit">Modifier</string>
     <string name="menu">Menu</string>
     <string name="details">Détails</string>
+    <string name="add">Ajouter</string>
+    <string name="search">Rechercher</string>
 
 </resources>

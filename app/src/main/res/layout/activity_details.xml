@@ -4,10 +4,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ADD"
+        android:text="@string/add"
         android:id="@+id/buttonAdd"
         android:clickable="true"
-        android:contentDescription="Bouton d ajout"
+        android:contentDescription="Bouton d'ajout"
         android:enabled="true"
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp"
@@ -18,10 +18,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EDIT"
-        android:id="@+id/buttonEdit"
+        android:text="@string/details"
+        android:id="@+id/buttonSee"
         android:clickable="true"
-        android:contentDescription="Bouton d édition"
         android:enabled="true"
         android:layout_marginLeft="33dp"
         android:layout_marginStart="33dp"
@@ -32,10 +31,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MENU"
+        android:text="@string/menu"
         android:id="@+id/buttonMenu"
         android:clickable="true"
-        android:contentDescription="Bouton de Retour au menu"
         android:enabled="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />

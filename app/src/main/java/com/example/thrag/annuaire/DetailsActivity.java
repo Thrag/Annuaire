@@ -23,17 +23,12 @@ public class DetailsActivity extends Activity{
 
     Button Add;
     Button Menu;
-    Button Edit;
+    Button Details;
 
-    Place place1 = new Place("Random Place","Random",421,422,"Random City","Random Category","Random Street", "0042");
-    Place place2 = new Place("Blop Place","Blop",800,801,"Blop City","Blop Category","Blop Street", "080");
-    Place place3 = new Place("Kaboum Place","Kaboum",690,691,"Kaboum City","Kaboum Category","Kaboum Street", "69");
-    Place[] listPlace = {place1,place2,place3};
-    //------------------------
+    Place item;
 
     private ListView lv;
 
-    //------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,16 +38,34 @@ public class DetailsActivity extends Activity{
         Add.setOnClickListener(listener);
         Menu = (Button)findViewById(R.id.buttonMenu);
         Menu.setOnClickListener(listener);
-        Edit = (Button)findViewById(R.id.buttonEdit);
-        Edit.setOnClickListener(listener);
+        Details = (Button)findViewById(R.id.buttonSee);
+        Details.setOnClickListener(listener);
 
         lv = (ListView) findViewById(R.id.detailList);
-        RemplirList();
+
+        Intent intent = getIntent();
+        if(intent.hasExtra("requete")) {
+            String request = intent.getStringExtra("requete");
+            String[] param = request.split("/");
+            RemplirList(param[0], param[1]);
+        }
+        else
+        {
+            RemplirList("name","");
+        }
     }
 
-    private void RemplirList() {
+    private void RemplirList(String category, String param) {
+
+        DBHelper db = new DBHelper(getApplicationContext());
+
+        db.getWritableDatabase();
+
+        ArrayList<Place> places = db.getAllNames(category,param);
+        places.toArray();
+
         ArrayAdapter<Place> arrayAdapter = new ArrayAdapter<Place>(
-                this,android.R.layout.simple_list_item_single_choice,listPlace );
+                this,android.R.layout.simple_list_item_single_choice,places );
         lv.setAdapter(arrayAdapter);
         lv.setItemChecked(0,true);
         lv.requestFocusFromTouch();
@@ -66,13 +79,17 @@ public class DetailsActivity extends Activity{
             switch (view.getId())
             {
                 case R.id.buttonAdd:
-                    addPlace();
-                    Intent u = new Intent(DetailsActivity.this, DetailsActivity.class);
+
+                    Intent u = new Intent(DetailsActivity.this, AddPlaceActivity.class);
                     startActivity(u);
                     break;
-                case R.id.buttonEdit:
-                    editPlace();
-                    Intent v = new Intent(DetailsActivity.this, DetailsActivity.class);
+                case R.id.buttonSee:
+
+                    Integer Position = lv.getCheckedItemPosition();
+                    item = (Place)lv.getItemAtPosition(Position);
+
+                    Intent v = new Intent(DetailsActivity.this, ShowDetails.class);
+                    v.putExtra("nom",item.getName());
                     startActivity(v);
                     break;
                 case R.id.buttonMenu:
@@ -101,19 +118,10 @@ public class DetailsActivity extends Activity{
         return super.onOptionsItemSelected(item);
     }
     public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-        Place item = (Place) adapter.getItemAtPosition(position);
+        item = (Place) adapter.getItemAtPosition(position);
         Toast.makeText(getApplicationContext(), "Test "+item.getName(), Toast.LENGTH_LONG).show();
     }
-    private void addPlace(){
-           //PLOP
-    }
-    private void removePlace(){
-        //PLOP
-    }
-    private void editPlace(){
-        Integer Position = lv.getCheckedItemPosition();
-        Toast.makeText(getApplicationContext(), "Choix =  "+(getPlace(Position).getCity()), Toast.LENGTH_LONG).show();
-    }
+
     private Place getPlace(int Position){
         Place placeFound = new Place();
         placeFound = (Place) lv.getItemAtPosition(Position);

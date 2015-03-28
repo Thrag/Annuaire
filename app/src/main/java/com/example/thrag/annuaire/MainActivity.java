@@ -17,6 +17,8 @@ public class MainActivity extends Activity {
 
     Button list;
     Button details;
+    Button add;
+    Button search;
 
     // Wesh ma gueule !
     // Kawabounga MA GEULE :D
@@ -32,25 +34,11 @@ public class MainActivity extends Activity {
         details = (Button)findViewById(R.id.buttonDetails);
         details.setOnClickListener(listener);
 
-        Place place1 = new Place("Test1", "Ceci est un test", 102, 102, "Liège", "Food", "rue des boobs", "911");
-        Place place2 = new Place("Test2", "Ceci est un test", 102, 102, "BXL", "Musée", "rue des nichons", "912");
-        Place place3 = new Place("Test3", "Ceci est un test", 102, 102, "Liège", "Musée", "rue des boobs", "913");
-        Place place4 = new Place("Test4", "Ceci est un test", 102, 102, "BXL", "Food", "rue des nichons", "914");
+        add = (Button)findViewById(R.id.buttonAdd);
+        add.setOnClickListener(listener);
 
-
-        DBHelper db = new DBHelper(getApplicationContext());
-
-        db.getWritableDatabase();
-
-        db.addPlace(place1);
-        db.addPlace(place2);
-        db.addPlace(place3);
-        db.addPlace(place4);
-
-        place1 = null;
-        place2 = null;
-        place3 = null;
-        place4 = null;
+        search = (Button)findViewById(R.id.buttonSearch);
+        search.setOnClickListener(listener);
     }
 
     View.OnClickListener listener = new View.OnClickListener()
@@ -61,24 +49,7 @@ public class MainActivity extends Activity {
             {
                 case R.id.buttonList:
 
-                    /*DBHelper db = new DBHelper(getApplicationContext());
-
-                    db.getWritableDatabase();
-
-                    ArrayList<Place> list = db.getAllNames("category", "Food");
-                    String result = "";
-
-                    for(int i = 0; i < list.size(); i++ )
-                    {
-
-                        result = result + list.get(i).getName()+" / ";
-                    }
-
-                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                    Intent u = new Intent(MainActivity.this, DetailsActivity.class);
-                    startActivity(u);*/
-
-                    Intent i = new Intent(MainActivity.this, AddPlaceActivity.class);
+                    Intent i = new Intent(MainActivity.this, DetailsActivity.class);
                     startActivity(i);
                     break;
 
@@ -87,7 +58,19 @@ public class MainActivity extends Activity {
                     Intent intent = new Intent(MainActivity.this, ShowDetails.class);
                     intent.putExtra("nom","Anata");
                     startActivity(intent);
+                    break;
+
+                case R.id.buttonAdd:
+
+                Intent u = new Intent(MainActivity.this, AddPlaceActivity.class);
+                startActivity(u);
                 break;
+
+                case R.id.buttonSearch:
+
+                    Intent w = new Intent(MainActivity.this, SearchActivity.class);
+                    startActivity(w);
+                    break;
             }
         }
     };
