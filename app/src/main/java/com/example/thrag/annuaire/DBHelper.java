@@ -32,17 +32,17 @@ public class DBHelper extends SQLiteOpenHelper
     private static final String COLUMN_LONGITUDE = "longitude";
 
     private static final String REQUETE_CREATION_PLACE = "create table "
-            + TABLE_PLACE + "("
-            + COlUMN_ID + " integer autoincrement, "
-            + COLUMN_NAME + "primary key, text not null, "
-            + COLUMN_DESCRIPTION
-            + COLUMN_CITY + "text not null"
-            + COLUMN_CATEGORY + "text not null"
-            + COLUMN_ADDRESS + "text not null"
-            + COLUMN_PHONE
-            + COLUMN_LATITUDE
+            + TABLE_PLACE + " ( "
+            + COlUMN_ID + " integer auto_increment, "
+            + COLUMN_NAME + " primary key not null, "
+            + COLUMN_DESCRIPTION + " , "
+            + COLUMN_CITY + " not null, "
+            + COLUMN_CATEGORY + " not null, "
+            + COLUMN_ADDRESS + " not null, "
+            + COLUMN_PHONE + " , "
+            + COLUMN_LATITUDE + " , "
             + COLUMN_LONGITUDE
-            + ");";
+            + " ); ";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -100,7 +100,7 @@ public class DBHelper extends SQLiteOpenHelper
 
         if (cursor.moveToFirst()) {
             cursor.moveToFirst();
-            place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
+            //place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
             place.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
             place.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
             place.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));
@@ -133,7 +133,7 @@ public class DBHelper extends SQLiteOpenHelper
         if (cursor.moveToFirst()) {
             place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
             db.delete(TABLE_PLACE, COlUMN_ID + " = ?",
-                    new String[] { String.valueOf(place.getID()) });
+                    new String[]{String.valueOf(place.getID())});
             cursor.close();
             result = true;
         }
@@ -141,7 +141,7 @@ public class DBHelper extends SQLiteOpenHelper
         return result;
     }
 
-    public boolean modifyEndroit(String name, Place place) {
+    public boolean modifyPlace(String name, Place place) {
 
         boolean result = false;
 
@@ -164,22 +164,31 @@ public class DBHelper extends SQLiteOpenHelper
         return result;
     }
 
-    public ArrayList<Place> getAllNames(){//DOING
+    public ArrayList<Place> getAllNames(String select, String search){
 
         ArrayList<Place> places = new ArrayList<Place>();
 
-        String query = "Select" + COLUMN_NAME + " FROM " + TABLE_PLACE;
+        String query = "";
+
+        switch (select) {
+            case COLUMN_NAME : query = query + "SELECT * FROM " + TABLE_PLACE ;
+                break;
+            case COLUMN_CATEGORY : query = query + "SELECT * FROM " + TABLE_PLACE + " WHERE " + COLUMN_CATEGORY + " = \"" + search + "\"";
+                break;
+            case COLUMN_CITY : query = query + "SELECT * FROM " + TABLE_PLACE + " WHERE " + COLUMN_CITY + " = \"" + search + "\"";
+                break;
+        }
 
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(query, null);
 
-        if (cursor .moveToFirst()) {
+        if (cursor.moveToFirst()) {
 
             while (cursor.isAfterLast() == false) {
                 Place place = new Place();
 
-                place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
+                //place.setID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COlUMN_ID))));
                 place.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
                 place.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
                 place.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));
@@ -193,15 +202,11 @@ public class DBHelper extends SQLiteOpenHelper
 
                 places.add(place);
             }
+            cursor.close();
         }
 
         db.close();
 
         return places;
     }
-
-    /*TODO SELECT ALL name
-        *SELECT ALL IN A CATEGORY
-        *SELECT ALL IN A CITY
-    */
 }

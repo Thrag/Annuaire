@@ -2,16 +2,21 @@ package com.example.thrag.annuaire;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
 
     Button list;
+
     // Wesh ma gueule !
     // Kawabounga MA GEULE :D
     // I am Groot
@@ -22,6 +27,26 @@ public class MainActivity extends Activity {
 
         list = (Button)findViewById(R.id.buttonList);
         list.setOnClickListener(listener);
+
+        Place place1 = new Place("Test1", "Ceci est un test", 102, 102, "Liège", "Food", "rue des boobs", "911");
+        Place place2 = new Place("Test2", "Ceci est un test", 102, 102, "BXL", "Musée", "rue des nichons", "912");
+        Place place3 = new Place("Test3", "Ceci est un test", 102, 102, "Liège", "Musée", "rue des boobs", "913");
+        Place place4 = new Place("Test4", "Ceci est un test", 102, 102, "BXL", "Food", "rue des nichons", "914");
+
+
+        DBHelper db = new DBHelper(getApplicationContext());
+
+        db.getWritableDatabase();
+
+        db.addPlace(place1);
+        db.addPlace(place2);
+        db.addPlace(place3);
+        db.addPlace(place4);
+
+        place1 = null;
+        place2 = null;
+        place3 = null;
+        place4 = null;
     }
 
     View.OnClickListener listener = new View.OnClickListener()
@@ -32,8 +57,20 @@ public class MainActivity extends Activity {
             {
                 case R.id.buttonList:
 
-                    Intent i = new Intent(MainActivity.this, ListActivity.class);
-                    startActivity(i);
+                    DBHelper db = new DBHelper(getApplicationContext());
+
+                    db.getWritableDatabase();
+
+                    ArrayList<Place> list = db.getAllNames("category", "Food");
+                    String result = "";
+
+                    for(int i = 0; i < list.size(); i++ )
+                    {
+
+                        result = result + list.get(i).getName()+" / ";
+                    }
+
+                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 
                     break;
             }

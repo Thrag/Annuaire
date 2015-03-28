@@ -31,7 +31,7 @@ public class Place {
     }
 
     //Constructor
-    public Place(String description, String name, float latitude, float longitude, String city, String category, String address, String phone) {
+    public Place(String name, String description,  float latitude, float longitude, String city, String category, String address, String phone) {
         this.description = description;
         this.name = name;
         this.latitude = latitude;

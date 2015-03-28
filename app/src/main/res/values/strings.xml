@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Hackthon</string>
-
-    <string name="list">Liste des villes</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Annuaire</string>
+    <string name="cityList">Liste des villes</string>
 </resources>
