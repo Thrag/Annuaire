@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Annuaire</string>
     <string name="cityList">Liste des villes</string>
+    <string name="cancel">Annuler</string>
+    <string name="valid">Valider</string>
+    <string name="name">Nom de l\'endroit</string>
+    <string name="description">Une brève description de l\'endroit</string>
+    <string name="category">Catégorie</string>
+    <string name="city">Ville</string>
+    <string name="address">Adresse</string>
+    <string name="phone">N° de téléphone</string>
+    <string name="addAlert">Veuillez compléter, au minimum, les champs en orange</string>
+
 </resources>

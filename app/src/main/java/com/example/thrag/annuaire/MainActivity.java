@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
             {
                 case R.id.buttonList:
 
-                    DBHelper db = new DBHelper(getApplicationContext());
+                    /*DBHelper db = new DBHelper(getApplicationContext());
 
                     db.getWritableDatabase();
 
@@ -72,8 +72,13 @@ public class MainActivity extends Activity {
 
                     Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                     Intent u = new Intent(MainActivity.this, DetailsActivity.class);
-                    startActivity(u);
+                    startActivity(u);*/
+
+                    Intent i = new Intent(MainActivity.this, AddPlaceActivity.class);
+                    startActivity(i);
                     break;
+
+
             }
         }
     };
